@@ -54,6 +54,21 @@ Make sure the following are installed on your machine:
 - [ ] Node.js 20+
 - [ ] PostgreSQL (running locally on port 5432)
 - [ ] Git
+- [ ] VS Code
+- [ ] GitHub Copilot extension for VS Code
+
+### Install VS Code
+
+Download and install from [code.visualstudio.com](https://code.visualstudio.com/). Accept the defaults.
+
+### Install GitHub Copilot
+
+1. Open VS Code → press `Ctrl+Shift+X` to open the Extensions panel
+2. Search for **GitHub Copilot** and click **Install**
+3. When prompted, sign in with your GitHub account
+4. Also install **GitHub Copilot Chat** for the chat interface
+
+You'll use Copilot as your AI partner throughout the design phase.
 
 ---
 
