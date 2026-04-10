@@ -95,8 +95,9 @@ CREATE DATABASE hero;
 CREATE SCHEMA hero;
 ```
 
-The default credentials expected by the app are `postgres / 1234`.
-If yours differ, update `hero-backend/src/main/resources/application.yml`.
+The app expects username `postgres` and password `1234`.
+When installing PostgreSQL, **set the password to `1234`** to match the app configuration.
+If you used a different password, update `hero-backend/src/main/resources/application.yml`.
 
 ### 3. Start the application
 
