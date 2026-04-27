@@ -11,11 +11,18 @@ $backendDir  = Join-Path $root "hero-backend"
 $frontendDir = Join-Path $root "hero-frontend"
 
 # Free port 8280 if already in use
-$stale = Get-NetTCPConnection -LocalPort 8280 -State Listen -ErrorAction SilentlyContinue |
-         Select-Object -ExpandProperty OwningProcess
+# $stale = Get-NetTCPConnection -LocalPort 8280 -State Listen -ErrorAction SilentlyContinue |
+#          Select-Object -ExpandProperty OwningProcess
+# if ($stale) {
+#     Write-Host "  [!] Port 8280 in use (PID $stale) - freeing it..." -ForegroundColor Yellow
+#     $stale | ForEach-Object { taskkill /F /T /PID $_ 2>&1 | Out-Null }
+#     Start-Sleep -Seconds 1
+# }
+$stale = lsof -ti tcp:8280
+
 if ($stale) {
-    Write-Host "  [!] Port 8280 in use (PID $stale) - freeing it..." -ForegroundColor Yellow
-    $stale | ForEach-Object { taskkill /F /T /PID $_ 2>&1 | Out-Null }
+    Write-Host "  [!] Port 8280 in use (PID $stale) - freeing it..."
+    Stop-Process -Id ([int]$stale) -Force
     Start-Sleep -Seconds 1
 }
 
@@ -25,7 +32,7 @@ Write-Host ''
 Write-Host '  == BACKEND (Spring Boot) ==' -ForegroundColor Green
 Write-Host ''
 Set-Location '$backendDir'
-.\mvnw.cmd spring-boot:run
+./mvnw spring-boot:run
 "@
 
 $frontendCmd = @"
@@ -37,8 +44,8 @@ Set-Location '$frontendDir'
 npm run dev
 "@
 
-$backendProc  = Start-Process powershell.exe -PassThru -ArgumentList "-NoExit", "-Command", $backendCmd
-$frontendProc = Start-Process powershell.exe -PassThru -ArgumentList "-NoExit", "-Command", $frontendCmd
+$backendProc  = Start-Process pwsh -PassThru -ArgumentList "-NoExit", "-Command", $backendCmd
+$frontendProc = Start-Process pwsh -PassThru -ArgumentList "-NoExit", "-Command", $frontendCmd
 
 Write-Host "  Backend   => http://localhost:8280  (PID $($backendProc.Id))" -ForegroundColor Green
 Write-Host "  Frontend  => http://localhost:5171  (PID $($frontendProc.Id))" -ForegroundColor Blue
